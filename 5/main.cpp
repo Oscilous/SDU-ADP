@@ -18,6 +18,7 @@ class Person : public Coyota_dealer_affiliated
         string name, address;
     public:
         Person(string n, string a) : name{n}, address{a} {} 
+        Person() = default;
         virtual string to_string(void){
             return name + " " + address;
         }
@@ -26,6 +27,12 @@ class Person : public Coyota_dealer_affiliated
         }
         string get_address(void){
             return address;
+        }
+        void set_name(string n){
+            name = n;
+        }
+        void set_address(string a){
+            address = a;
         }
 };
 
@@ -42,7 +49,7 @@ class Japanese_mechanic : public Person
 };
 
 
-class Customer : public Person{
+class Customer : virtual public Person{
     friend ostream& operator<<(ostream& out, Customer c);
     friend void print_cost(void);
     private:
@@ -51,10 +58,12 @@ class Customer : public Person{
         static int highest_id;
 
     public:
-        Customer(string name, string address, double a) : Person(name, address), customer_id{highest_id}, account{a} {
+        Customer(string name, string address, double a) : customer_id{highest_id}, account{a} {
+            Person::set_name(name);
+            Person::set_address(address);
             highest_id++;
-
             } 
+        Customer() = default;
         string to_string(void) override
         {
             return Person::to_string() + " " + std::to_string(customer_id);
@@ -73,12 +82,17 @@ ostream& operator<<(ostream& out, Customer c)
 }
 
 
-class Employee : public Person{
+class Employee : virtual public Person{
     private:
         int employee_id;
         static int highest_id;
     public:
-        Employee(string name, string address) : Person(name, address), employee_id{highest_id} {highest_id++;} 
+        Employee(string name, string address) : employee_id{highest_id} {
+            Person::set_name(name);
+            Person::set_address(address);
+            highest_id++;
+            } 
+        Employee() = default;
         string to_string(void) override
         {
             return Person::to_string() + " " + std::to_string(employee_id);
@@ -90,11 +104,12 @@ class Employee : public Person{
 };
 int Employee::highest_id {0};
 
-class Mechanic : public Employee{
+class Mechanic : virtual public Employee{
     private:
         double hourly_salary, hours;
     public:
         Mechanic(string name, string address) : Employee(name, address) {} 
+        Mechanic() = default;
         string to_string(void) override
         {
             return "Mechanic " + Employee::to_string();
@@ -158,6 +173,21 @@ class Foreign_worker : public Japanese_mechanic, public Mechanic
         }
 };
 
+class Mechanic_customer : public Mechanic , public Customer{
+    public:
+        Mechanic_customer(string name, string address) {
+            Person::set_name(name);
+            Person::set_address(address);
+        }
+        string to_string(void) override
+        {
+            return "Mechanic Customer " + Person::to_string();
+        }
+        string write_letter_to(string s) override{
+            return "Dear Mechanical Customer " + get_name() + ", " + s;
+        }
+};
+
 int main (void){
     vector<Customer *> customers{};
 
@@ -205,6 +235,10 @@ int main (void){
     Japanese_mechanic jm("Ito", "Kyoto");
 
     cout << jm.to_string() << endl;
+
+    Mechanic_customer Brian("Brian", "Brain");
+
+    cout << Brian.to_string() << endl;
 
     return 0;
 }
