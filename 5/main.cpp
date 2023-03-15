@@ -1,7 +1,10 @@
 #include<iostream>
 #include <vector>
+#include <algorithm>
+#include <set>
 
 using namespace std;
+
 
 
 class Coyota_dealer_affiliated
@@ -189,8 +192,8 @@ class Mechanic_customer : public Mechanic , public Customer{
 };
 
 int main (void){
+    
     vector<Customer *> customers{};
-
     
     Customer c1("Joe", "Street 8", 4.0);
     customers.push_back(&c1);
@@ -207,6 +210,10 @@ int main (void){
     employees.push_back(&d1);
     Mechanic m1("Matty", "AK 6");
     employees.push_back(&m1); 
+
+    Mechanic_customer Brian("Brian", "Brain");
+    customers.push_back(&Brian);
+    employees.push_back(&Brian);
     for (auto i : customers) {
         cout << i->to_string() << endl;
     }
@@ -221,11 +228,12 @@ int main (void){
     }
     cout << "Sum: " << sum << endl << endl << endl;
 
-    for (auto i : customers){
-        cout << i->write_letter_to(" easter")<<endl;
-    }
+    //for (auto i : customers){
+    //    cout << i->write_letter_to(" easter")<<endl;
+    //}
 
-    vector <Person*> dealers{};    
+    vector <Person*> dealers{};   
+
     dealers.insert(dealers.end(), customers.begin(), customers.end());
     dealers.insert(dealers.end(), employees.begin(), employees.end());
     for (auto i : dealers) {
@@ -235,10 +243,6 @@ int main (void){
     Japanese_mechanic jm("Ito", "Kyoto");
 
     cout << jm.to_string() << endl;
-
-    Mechanic_customer Brian("Brian", "Brain");
-
-    cout << Brian.to_string() << endl;
 
     return 0;
 }
