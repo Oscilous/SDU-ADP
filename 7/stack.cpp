@@ -3,7 +3,7 @@ using namespace std;
 
 template<class T, int N>
 T average(const T (&array)[N]){
-    t sum{};
+    T sum{};
     for(const T i : array){
         sum += i;
     }
@@ -26,7 +26,8 @@ class Intstack10{
 
 template<class ElementType, int size>
 class Stack{
-    friend ElementType average<ElementType, size>(const Stack<ElementType , size> &s);
+    template<class T, int N>
+    friend T average(Stack<T , N> &s);
     private:
         ElementType stack_array[size];
         int top;
@@ -41,7 +42,7 @@ class Stack{
 };
 
 template<class T, int N>
-T average(const Stack<T,N> &s){
+T average(Stack<T,N> &s){
     T sum{};
     for(int i=0; i<=s.top; i++){
         sum += s.stack_array[i];

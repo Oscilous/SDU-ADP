@@ -44,6 +44,8 @@ class IntQueue{
 template<class type, int size>
 class Queue{ 
     friend ostream& operator<<(ostream& out, Person c);
+    template<class T, int N>
+    friend T average(Queue<T,N> &s);
     private:
         type array[size];
         int queue_start{0}, queue_end{-1}, actual_size{0};
@@ -72,6 +74,15 @@ ostream& operator<<(ostream& out, Person c)
 	return out;
 }
 
+template<class T, int N>
+T average(Queue<T,N> &s){
+    T sum{};
+    for(int i=s.queue_start; i<=s.queue_end; i++){
+        sum += s.stack_array[i];
+    }
+    return sum / (s.top);
+}
+
 int main (void){
     IntQueue myQueue;
     myQueue.enqueue(2);
@@ -98,5 +109,6 @@ int main (void){
     personQueue.enqueue(Joe);
     personQueue.enqueue(Toe);
     personQueue.dump();
+    cout << average<double>(doubleQueue) << endl;
     return 0;
 }
