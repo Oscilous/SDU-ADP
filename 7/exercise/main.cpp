@@ -109,6 +109,5 @@ int main (void){
     personQueue.enqueue(Joe);
     personQueue.enqueue(Toe);
     personQueue.dump();
-    cout << average<double>(doubleQueue) << endl;
     return 0;
 }
