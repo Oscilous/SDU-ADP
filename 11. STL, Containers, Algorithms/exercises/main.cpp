@@ -16,6 +16,18 @@ void print_regular(pair<string, int> element){
     cout << element.first <<" "<< element.second << endl;
 }
 
+//Regular function
+//auto compare(pair<string,int> a, pair<string,int> b) {
+//             return a.second < b.second;
+//}
+
+//Functor
+struct Compare{
+    bool operator()(pair<string,int> a, pair<string,int> b){
+        return a.second < b.second;
+    }
+}compare;
+
 class Customer_credit_register{
 private:
     map<string, int> credit_maximums;
@@ -62,10 +74,12 @@ public:
         //Regular function
         for_each(credit_maximums.cbegin(), credit_maximums.cend(), print_regular);
     }
-    bool get_creditMax_maximum(void){
+    int get_creditMax_maximum(void){
         //Lamda
-        auto compare = [](pair<string,int> begin, pair<string,int> end) { return begin.second < end.second; };
-        return max_element(credit_maximums.begin(), credit_maximums.end(), compare); 
+        //auto compare = [](pair<string,int> a, pair<string,int> b) {
+        //     return a.second < b.second; };
+        pair<string, int> max_pair = *max_element(credit_maximums.begin(), credit_maximums.end(), compare); 
+        return max_pair.second;
     }
 };
 
@@ -73,21 +87,17 @@ int main(void){
     
     Customer_credit_register myCustomers;
 
-    myCustomers.register_customer("Joe", 69);
-    myCustomers.set_creditMax("Joe", 420);
+    myCustomers.register_customer("Joe", 50);
+    myCustomers.set_creditMax("Joe", 400);
     myCustomers.print_credit("Joe");
-
+    cout << boolalpha;
     myCustomers.register_customer("Jo", 1);
     cout << "Total maximums: " << myCustomers.sum_of_creditMaxes() << endl;
     myCustomers.clear_all_creditMaxes();
     cout << "Total maximums: " << myCustomers.sum_of_creditMaxes() << endl;
     
-    myCustomers.register_customer("Hoe", 420);
+    myCustomers.register_customer("Bo", 500);
     myCustomers.print_all();
-    myCustomers.print_credit("Hoe");
-    cout << " more than ";
-    myCustomers.print_credit("Joe");
-    cout << "is " << myCustomers.get_creditMax_maximum() << endl;
-
+    cout << "Highest maximum is " << myCustomers.get_creditMax_maximum();
     return 0;
 }
