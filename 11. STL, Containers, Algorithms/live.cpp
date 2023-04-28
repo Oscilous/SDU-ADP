@@ -26,17 +26,18 @@ void dog_print(const Dog* cdptr) { cdptr->print(); }
 
 struct Dog_name_cmp{
 	bool operator()(const Dog* dog1, const Dog* dog2){ return dog1->get_name() > dog2->get_name(); }
-};
+}Dog_name_cmp;
 
 int main(void)
 {
-	Dog fido("Fido"), rolf("Rolf"), pluto("Pluto", 10), anton("Anton", 3);
+	Dog fido("Fido", 1), rolf("Rolf", 12), pluto("Pluto", 10), anton("Anton", 3), joe("joe", 5);
 	vector< const Dog*> dogPtrs;
 
 	dogPtrs.push_back(&fido);
 	dogPtrs.push_back(&rolf);
 	dogPtrs.push_back(&pluto);
 	dogPtrs.push_back(&anton);
+	dogPtrs.push_back(&joe);
 
 	/* Old way
 	for(int i; i < dogPtrs.size(); i++){
@@ -65,11 +66,15 @@ int main(void)
 	//For each way of doing it, requires a function
 	//Might be used as a good thing, function can change the parameter
 	for_each(cbegin(dogPtrs), cend(dogPtrs), dog_print);
-	cout << endl;
+	bool found = binary_search(cbegin(dogPtrs), cend(dogPtrs), &joe ,Dog_name_cmp);
+	cout << (found ? "We found Joe" : "we did not :(") << endl;
 	//Descend in name
-	Dog_name_cmp Compare{};
-	sort(begin(dogPtrs), end(dogPtrs), Compare);
+	sort(begin(dogPtrs), end(dogPtrs), Dog_name_cmp);
 	for_each(cbegin(dogPtrs), cend(dogPtrs), dog_print);
 
+	int min_age = (*min_element(begin(dogPtrs), end(dogPtrs),
+		[] ( const Dog* dog1, const Dog* dog2)
+		{ return dog1->get_age() < dog2->get_age(); }))->get_age();
+	cout << "Youngest age is " << min_age << endl;
 	return 0;
 }
